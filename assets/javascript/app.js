@@ -8,3 +8,19 @@
     messagingSenderId: "998231386924"
   };
   firebase.initializeApp(config);
+
+var startLocation;
+var destination;
+var mpg;
+ 
+  $("#submit").on("click", function(event){
+    event.preventDefault();
+    startLocation = $("#startLocation").val();
+    destination = $("#startLocation").val();
+    mpg = $("#mpg").val();
+  
+    
+  });
+  
+  
+  
