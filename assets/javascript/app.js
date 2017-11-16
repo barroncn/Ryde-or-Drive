@@ -9,16 +9,26 @@
   };
   firebase.initializeApp(config);
 
-var startLocation;
-var destination;
-var mpg;
+var startLocation = "";
+var destination = "";
+var mpg = "";
  
   $("#submit").on("click", function(event){
     event.preventDefault();
     startLocation = $("#startLocation").val();
-    destination = $("#startLocation").val();
+    destination = $("#destination").val();
     mpg = $("#mpg").val();
-  
+    
+    if((startLocation !== "") && (destination !== "") && (mpg !== "")){
+        $("#startLocation").val("");
+        $("#destination").val("");
+        $("#mpg").val("");
+        $("#message").html("");
+      }
+      
+    else{
+      $("#message").html("Please input all information");
+    }
     
   });
   
