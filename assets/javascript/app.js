@@ -1,21 +1,23 @@
+/* global $ */
+/* global firebase */
+
 // Initialize Firebase
-  var config = {
+var config = {
     apiKey: "AIzaSyAAi7s87SW5XOtn5dKwIBwEIZsY4tBZfkg",
     authDomain: "ryde-or-dryve.firebaseapp.com",
     databaseURL: "https://ryde-or-dryve.firebaseio.com",
     projectId: "ryde-or-dryve",
     storageBucket: "ryde-or-dryve.appspot.com",
     messagingSenderId: "998231386924"
-  };
-  firebase.initializeApp(config);
+};
+firebase.initializeApp(config);
 
 var startLocation = "";
 var destination = "";
 var mpg = "";
 
-var samplePriceResultsUber = {
-    "prices": [
-        {
+var uberPriceResults = {
+    "prices": [{
             "localized_display_name": "SELECT",
             "distance": 6.25,
             "display_name": "SELECT",
@@ -118,9 +120,8 @@ var samplePriceResultsUber = {
 };
 
 
-var sampleTimeResultsUber = {
-  "times": [
-        {
+var uberTimeResults = {
+    "times": [{
             "localized_display_name": "SELECT",
             "estimate": 180,
             "display_name": "SELECT",
@@ -176,26 +177,90 @@ var sampleTimeResultsUber = {
         }
     ]
 }
- 
-  $("#submit").on("click", function(event){
+
+
+$("#display").hide();
+$("#locationcheck").on("click", function() {
+    if ($("#locationcheck").prop("checked")) {
+        console.log("checked")
+        $("#startLocationParent").hide()
+    };
+    if (!$("#locationcheck").prop("checked")) {
+        console.log("unchecked")
+        $("#startLocationParent").show()
+    }
+})
+
+
+$("#submit").on("click", function(event) {
     event.preventDefault();
     startLocation = $("#startLocation").val();
     destination = $("#destination").val();
     mpg = $("#mpg").val();
-    
-    if((startLocation !== "") && (destination !== "") && (mpg !== "")){
+
+    if ((startLocation !== "") && (destination !== "") && (mpg !== "")) {
         $("#startLocation").val("");
         $("#destination").val("");
         $("#mpg").val("");
         $("#message").html("");
-      }
-      
-    else{
-      $("#message").html("Please input all information");
     }
-    
-  });
-  
+
+    else {
+        $("#message").html("Please input all information");
+    }
+    $("#main").hide();
+    $("#display").show();
+
+    // Uber
+    var uberPrice = ""
+    var minutesTilUber = ""
+    for (var i = 0; i < uberPriceResults.prices.length; i++) {
+        if ("uberX" === uberPriceResults.prices[i].display_name) {
+            var index = i;
+        }
+    }
+
+    uberPrice = uberPriceResults.prices[index].estimate;
+    console.log(uberPrice);
+
+    for (var i = 0; i < uberTimeResults.times.length; i++) {
+        if ("uberX" === uberTimeResults.times[i].display_name) {
+            var index = i;
+        }
+    }
+    minutesTilUber = uberTimeResults.times[index].estimate / 60;
+
+    $("#ubercost").text(uberPrice)
+    $("#uberETA").text(minutesTilUber)
+
+
+
+    // Lyft
+    var lyftPrice = "$18-21"
+    var minutesTilLyft = "2"
+    $("#lyftcost").text(lyftPrice)
+    $("#lyftETA").text(minutesTilLyft)
+
+    //Driving
+    var driveDistance = ""
+    for (var i = 0; i < uberPriceResults.prices.length; i++) {
+        if ("uberX" === uberPriceResults.prices[i].display_name) {
+            var index = i;
+        }
+    }
+
+    driveDistance = uberPriceResults.prices[index].distance;
+    console.log(driveDistance)
+    var gasPrice = 2.50
+    console.log(mpg)
+    var driveCost = (driveDistance / mpg) * gasPrice
+    console.log(driveCost)
+    $("#gascost").text("$" + driveCost.toFixed(2))
+
+
+
+});
+
 //   var settings = {
 //   "async": true,
 //   "crossDomain": true,
@@ -214,19 +279,19 @@ var sampleTimeResultsUber = {
 
 //This is the code Jeff is going over for the CORS issues
 $.ajax({
-          url: "https://api.uber.com/v1.2/estimates/time", 
-          beforeSend: function(xhr) { 
-            xhr.setRequestHeader("Authorization", "Token" + btoa("KA.eyJ2ZXJzaW9uIjoyLCJpZCI6InNLVFJjOGlFVFdTSFNEc24rZm5YOHc9PSIsImV4cGlyZXNfYXQiOjE1MTM1MjA5NzQsInBpcGVsaW5lX2tleV9pZCI6Ik1RPT0iLCJwaXBlbGluZV9pZCI6MX0.5Yumx3RvUwqXiRzabQnWplP1C-gl9K2ZU9WRlB2Ws4E")); 
-          },
-          type: 'GET',
-          dataType: 'json',
-          contentType: 'application/json',
-          processData: false,
-          data: "start_latitude=37.7752315&start_longitude=-122.418075",
-          success: function (data) {
-            alert(JSON.stringify(data));
-          },
-          error: function(){
-            alert("Cannot get data");
-          }
-        });
+    url: "https://api.uber.com/v1.2/estimates/time",
+    beforeSend: function(xhr) {
+        xhr.setRequestHeader("Authorization", "Token" + btoa("KA.eyJ2ZXJzaW9uIjoyLCJpZCI6InNLVFJjOGlFVFdTSFNEc24rZm5YOHc9PSIsImV4cGlyZXNfYXQiOjE1MTM1MjA5NzQsInBpcGVsaW5lX2tleV9pZCI6Ik1RPT0iLCJwaXBlbGluZV9pZCI6MX0.5Yumx3RvUwqXiRzabQnWplP1C-gl9K2ZU9WRlB2Ws4E"));
+    },
+    type: 'GET',
+    dataType: 'json',
+    contentType: 'application/json',
+    processData: false,
+    data: "start_latitude=37.7752315&start_longitude=-122.418075",
+    success: function(data) {
+        alert(JSON.stringify(data));
+    },
+    error: function() {
+        console.log("Cannot get data");
+    }
+});
