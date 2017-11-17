@@ -1,0 +1,48 @@
+body{
+    padding-top:20px;
+    background-image: url("../images/pic.png");
+}
+
+#main{
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: 'Rubik', sans-serif;
+    color: #dfdfdf;
+    background-color: #9500ba;
+    padding: 15px;
+    border: 2px solid #1e1e1e;
+}
+/*20a599  9500ba */
+
+#header{
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 40px;
+    font-family: 'Rubik', sans-serif;
+    color: #dfdfdf;
+    background-color: #9500ba;
+    padding: 15px;
+    border: 2px solid #1e1e1e;
+}
+
+#submit{
+    background-color: #1e1e1e;
+    border-color: #1e1e1e;
+}
+#submit:hover{
+    border-color: #dfdfdf;
+}
+
+.container{
+    max-width: 700px;
+}
+
+#message{
+    margin-left: 5px;
+    font-size: 15px;
+    text-decoration: oblique;
+}
+
+.form-control{
+    background-color: #dfdfdf;
+}
