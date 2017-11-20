@@ -1,9 +1,16 @@
-body{
-    padding-top:20px;
-    background-image: url("../images/pic.png");
+body {
+    padding-top: 20px;
+    background-image: url("../images/pic2.png");
 }
 
-#main{
+#loading {
+
+    background: url(../images/loading.gif);
+    height: 200px;
+    background-repeat: no-repeat;
+}
+
+#main {
     border-radius: 5px;
     font-size: 20px;
     font-family: 'Rubik', sans-serif;
@@ -12,9 +19,31 @@ body{
     padding: 15px;
     border: 2px solid #1e1e1e;
 }
+
 /*20a599  9500ba */
 
-#header{
+#display {
+    border-radius: 5px;
+    font-size: 20px;
+    font-family: 'Rubik', sans-serif;
+    color: #dfdfdf;
+    overflow: auto;
+    padding: 15px;
+    background-color: #9500ba;
+    border: 2px solid #1e1e1e;
+    /*height: 130px*/
+}
+
+#ubercost,
+#uberETA,
+#lyftcost,
+#lyftETA,
+#carETA,
+#gascost {
+    color: #FFD05C;
+}
+
+#header {
     border-radius: 5px;
     margin-top: 20px;
     font-size: 40px;
@@ -25,24 +54,25 @@ body{
     border: 2px solid #1e1e1e;
 }
 
-#submit{
+#submit {
     background-color: #1e1e1e;
     border-color: #1e1e1e;
 }
-#submit:hover{
+
+#submit:hover {
     border-color: #dfdfdf;
 }
 
-.container{
+.container {
     max-width: 700px;
 }
 
-#message{
+#message {
     margin-left: 5px;
     font-size: 15px;
     text-decoration: oblique;
 }
 
-.form-control{
+.form-control {
     background-color: #dfdfdf;
 }
