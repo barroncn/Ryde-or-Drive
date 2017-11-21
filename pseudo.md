@@ -12,6 +12,7 @@ Gather Input
     app calculates cost of gas
     app calls both ride share APIs (UBER and Lyft)
     app collects and stores wait times and pricing
+    app collects distance
     
 Display output
     app displays cost of driving (cost of gas)
@@ -29,3 +30,19 @@ Display output
         -request assistance utilizing Postman for UBER and Lyft APIs
         -be prepared to explain the MVP-version of our APP along with features
             we would like to implement.
+            
+            
+on submit
+input vars go to google APIs
+google API vars are stored
+google input vars go to UBER and Lyft APIS
+Uber and Lyft API vars are stored
+Uber and Lyft vars to to output
+
+start
+    dest
+        UBER
+            write UBER
+        Lyft
+            write Lyft
+            

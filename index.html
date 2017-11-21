@@ -6,10 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://use.fontawesome.com/8bd2ed03e6.js"></script>
     <link rel="stylesheet" href="assets/css/style.css" type="text/css" />
     <link href="https://fonts.googleapis.com/css?family=Cabin|Rubik" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://www.gstatic.com/firebasejs/4.6.2/firebase.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6P6KfBWOmNmMk9IRDVgl8OTmVtMmSEQk&libraries=places"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 </head>
 
 <body>
@@ -19,15 +23,34 @@
         </div>
         <div id="display">
             <div class="col-md-12">
+                <p id="address"><span id="formatS"></span>
+                    <br>
+                    <span id="arrow"><i class="fa fa-arrow-down" aria-hidden="true"></i></i></span>
+                    <br>
+                    <span id="formatD"></span></p>
+                <br>
+                <p id="generalInfo">It will take <span id="theDuration"></span> to drive <span id="theDistance"></span>.</p>
+                <hr>
                 <p id="uberdisplay">
-                    <span id="uberlogo"></span><span>Cost: </span><span id="ubercost"></span><span> An Uber driver is </span><span id="uberETA"></span><span> minutes away!</span>
+                    <span id="uberlogo"></span><span>Cost for an UberX: </span><span id="ubercost"></span>
+                    <br>
+                    <span id="uberETABefore"></span><span id="uberETA"></span><span id="uberETAAfter"></span>
                 </p>
+                <hr>
                 <p id="lyftdisplay">
-                    <span id="lyftlogo"></span><span>Cost: </span><span id="lyftcost"></span><span> A Lyft driver is </span><span id="lyftETA"></span><span> minutes away!</span>
+                    <span id="lyftlogo"></span><span>Cost for a Lyft: </span><span id="lyftcost"></span>
+                    <br>
+                    <span id="lyftETABefore"></span><span id="lyftETA"></span><span id="lyftETAAfter"></span>
                 </p>
+                <hr>
                 <p id="cardisplay">
-                    <span id="carlogo"></span><span>Cost: </span><span id="gascost"></span><span> It will take you </span><span id="carETA"></span><span> minutes to drive!</span>
+                    <span id="carlogo"></span><span>Cost to Drive: </span><span id="gascost"></span>
+                    <br>
+                    <span id="carETA"></span>
+                    <br>
                 </p>
+                <button class="btn btn-primary" id="reset" type="submit">Clear Search</button><span id="message"></span>
+
             </div>
         </div>
         <div>
@@ -36,7 +59,7 @@
             </div>
         </div>
         <div id="main">
-            <form>
+            <form id="theForm">
                 <div class="form-group">
                     <input type="checkbox" name="location" id="locationcheck" value=""> Use my location<br>
                 </div>
@@ -52,9 +75,99 @@
                     <label for="start-input">Your vehicle's average MPG:</label>
                     <input class="form-control" id="mpg" type="text">
                 </div>
-                <button class="btn btn-primary" id="submit" type="submit">Submit</button><span id="message"></span>
+
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Car Year
+                        <span class="caret" </span>
+                      </button>
+                    <ul class="dropdown-menu year" id="carYear" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="#" data-year="2017" class="years">2017</a>
+                        </li>
+                        <li>
+                            <a href="#" data-year="2016" class="years">2016</a>
+                        </li>
+                        <li>
+                            <a href="#">2015</a>
+                        </li>
+                        <li>
+                            <a href="#">2014</a>
+                        </li>
+                        <li>
+                            <a href="#">2013</a>
+                        </li>
+                        <li>
+                            <a href="#">2012</a>
+                        </li>
+                        <li>
+                            <a href="#">2011</a>
+                        </li>
+                        <li>
+                            <a href="#">2010</a>
+                        </li>
+                        <li>
+                            <a href="#">2009</a>
+                        </li>
+                        <li>
+                            <a href="#">2008</a>
+                        </li>
+                        <li>
+                            <a href="#">2007</a>
+                        </li>
+                        <li>
+                            <a href="#">2006</a>
+                        </li>
+                        <li>
+                            <a href="#">2005</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
+
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+    Car Class
+    <span class="caret"></span>
+  </button>
+                    <ul class="dropdown-menu class" id="carClass" aria-labelledby="dropdownMenu1">
+                        <li>
+                            <a href="#" data-class="light sedan" class="carClass">Light Sedan</a>
+                        </li>
+                        <li>
+                            <a href="#">Medium Sedan</a>
+                        </li>
+                        <li>
+                            <a href="#">Large Sedan</a>
+                        </li>
+                        <li>
+                            <a href="#">Small SUV</a>
+                        </li>
+                        <li>
+                            <a href="#">Large SUV</a>
+                        </li>
+                        <li>
+                            <a href="#">Minivan</a>
+                        </li>
+                        <li>
+                            <a href="#">Truck</a>
+                        </li>
+                        <li>
+                            <a href="#">Hybrid</a>
+                        </li>
+                        <li>
+                            <a href="#">Electric</a>
+                        </li>
+                    </ul>
+                </div>
+
+
+
             </form>
-        </div>
+            <button class="btn btn-primary" id="submit" type="submit">Submit</button><span id="message"></span></div>
+    </div>
     </div>
     <script type="text/javascript" src="assets/javascript/display.js"></script>
 </body>
