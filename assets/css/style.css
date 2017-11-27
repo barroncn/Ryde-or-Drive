@@ -4,10 +4,23 @@ body {
 }
 
 #loading {
-
-    background: url(../images/loading.gif);
-    height: 200px;
+    text-align: center;
+    background: url(../images/loading4.gif);
+    display: block;
+    height: 350px;
+    margin: 0 auto;
     background-repeat: no-repeat;
+
+}
+
+#uberlogo,
+#lyftlogo,
+#carlogo {
+    float: left;
+}
+
+#rydeIcon {
+    max-width: 100%;
 }
 
 /*#button{*/
@@ -83,6 +96,15 @@ body {
     text-decoration: oblique;
 }
 
+/*#resetButton,
+*/
+
+/*#uberdisplay,*/
+
+/*#lyftdisplay,*/
+
+/*#cardisplay,*/
+
 #address {
     text-align: center;
 }
@@ -135,5 +157,36 @@ body {
     text-align: center;
     font-size: 18px;
     font-style: italic;
+    color: #FFD05C;
+}
+
+.icon {
+    height: 64px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.dropdown {
+    float: left;
+    margin: 20px 20px 20px 0px;
+}
+
+.clearfix::after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+#carETA {
+    font-weight: normal;
+    font-size: 18px;
+}
+
+a:hover {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+#orange {
     color: #FFD05C;
 }

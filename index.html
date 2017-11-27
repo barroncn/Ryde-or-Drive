@@ -19,7 +19,8 @@
 <body>
     <div class="container">
         <div class="jumbotron text-center" id="header">
-            <h1>Ride or Drive?</h1>
+            <img id="rydeIcon" src="assets/images/headerImage.png">
+            <!--<h1>Ride or Drive?</h1>-->
         </div>
         <div id="display">
             <div class="col-md-12">
@@ -32,24 +33,27 @@
                 <p id="generalInfo">It will take <span id="theDuration"></span> to drive <span id="theDistance"></span>.</p>
                 <hr>
                 <p id="uberdisplay">
-                    <span id="uberlogo"></span><span>Cost for an UberX: </span><span id="ubercost"></span>
+                    <span id="uberlogo"><a href="https://get.uber.com/go" target="blank"><img class="icon" src="assets/images/uber-128.png"></a></span><span>Cost: </span><span id="ubercost"></span>
                     <br>
                     <span id="uberETABefore"></span><span id="uberETA"></span><span id="uberETAAfter"></span>
                 </p>
                 <hr>
                 <p id="lyftdisplay">
-                    <span id="lyftlogo"></span><span>Cost for a Lyft: </span><span id="lyftcost"></span>
+                    <span id="lyftlogo"><a href="https://www.lyft.com/app" target="blank"><img class ="icon" src="assets/images/lyft.png"></a></span><span>Cost: </span><span id="lyftcost"></span>
                     <br>
-                    <span id="lyftETABefore"></span><span id="lyftETA"></span><span id="lyftETAAfter"></span>
+                    <span id="lyftETABefore"></span>
+                    <!--<span id="lyftETABefore"></span><span id="lyftETA"></span><span id="lyftETAAfter"></span>-->
                 </p>
                 <hr>
                 <p id="cardisplay">
-                    <span id="carlogo"></span><span>Cost to Drive: </span><span id="gascost"></span>
+                    <span id="carlogo"><a href="https://www.google.com/maps" target="_blank"><img class ="icon" src="assets/images/map.png"></a></span><span>Cost to Drive: </span><span id="gascost"></span>
                     <br>
-                    <span id="carETA"></span>
+                    <a href="https://parkme.com" target="_blank"><span id="carETA">Need Parking?</span></a>
                     <br>
-                </p>
-                <button class="btn btn-primary" id="reset" type="submit">Clear Search</button><span id="message"></span>
+
+                </p> <br>
+
+                <p id="resetButton"><button class="btn btn-primary" id="reset" type="submit">Clear Search</button></p>
 
             </div>
         </div>
@@ -71,15 +75,15 @@
                     <label for="destination-input">Destination:</label>
                     <input class="form-control" id="destination" type="text">
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="mpgParent">
                     <label for="start-input">Your vehicle's average MPG:</label>
                     <input class="form-control" id="mpg" type="text">
                 </div>
 
-                <div class="dropdown">
+                <div class="dropdown dd1">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         Car Year
-                        <span class="caret" </span>
+                        <span class="caret"> </span>
                       </button>
                     <ul class="dropdown-menu year" id="carYear" aria-labelledby="dropdownMenu1">
                         <li>
@@ -89,37 +93,37 @@
                             <a href="#" data-year="2016" class="years">2016</a>
                         </li>
                         <li>
-                            <a href="#">2015</a>
+                            <a href="#" data-year="2015" class="years">2015</a>
                         </li>
                         <li>
-                            <a href="#">2014</a>
+                            <a href="#" data-year="2014" class="years">2014</a>
                         </li>
                         <li>
-                            <a href="#">2013</a>
+                            <a href="#" data-year="2013" class="years">2013</a>
                         </li>
                         <li>
-                            <a href="#">2012</a>
+                            <a href="#" data-year="2012" class="years">2012</a>
                         </li>
                         <li>
-                            <a href="#">2011</a>
+                            <a href="#" data-year="2011" class="years">2011</a>
                         </li>
                         <li>
-                            <a href="#">2010</a>
+                            <a href="#" data-year="2010" class="years">2010</a>
                         </li>
                         <li>
-                            <a href="#">2009</a>
+                            <a href="#" data-year="2009" class="years">2009</a>
                         </li>
                         <li>
-                            <a href="#">2008</a>
+                            <a href="#" data-year="2008" class="years">2008</a>
                         </li>
                         <li>
-                            <a href="#">2007</a>
+                            <a href="#" data-year="2007" class="years">2007</a>
                         </li>
                         <li>
-                            <a href="#">2006</a>
+                            <a href="#" data-year="2006" class="years">2006</a>
                         </li>
                         <li>
-                            <a href="#">2005</a>
+                            <a href="#" data-year="2005" class="years">2005</a>
                         </li>
                     </ul>
                 </div>
@@ -129,43 +133,44 @@
 
                 <div class="dropdown">
                     <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-    Car Class
-    <span class="caret"></span>
-  </button>
-                    <ul class="dropdown-menu class" id="carClass" aria-labelledby="dropdownMenu1">
+                        Car Class
+                        <span class="caret"></span>
+                      </button>
+                    <ul class="dropdown-menu class" id="carClass" data-click="unclicked" aria-labelledby="dropdownMenu1">
                         <li>
-                            <a href="#" data-class="light sedan" class="carClass">Light Sedan</a>
+                            <a href="#" data-class="small sedan" class="carClass">Small Sedan</a>
                         </li>
                         <li>
-                            <a href="#">Medium Sedan</a>
+                            <a href="#" data-class="medium sedan" class="carClass">Medium Sedan</a>
                         </li>
                         <li>
-                            <a href="#">Large Sedan</a>
+                            <a href="#" data-class="large sedan" class="carClass">Large Sedan</a>
                         </li>
                         <li>
-                            <a href="#">Small SUV</a>
+                            <a href="#" data-class="small suv" class="carClass">Small SUV</a>
                         </li>
                         <li>
-                            <a href="#">Large SUV</a>
+                            <a href="#" data-class="large suv" class="carClass">Large SUV</a>
                         </li>
                         <li>
-                            <a href="#">Minivan</a>
+                            <a href="#" data-class="minivan" class="carClass">Minivan</a>
                         </li>
                         <li>
-                            <a href="#">Truck</a>
+                            <a href="#" data-class="truck" class="carClass">Truck</a>
                         </li>
                         <li>
-                            <a href="#">Hybrid</a>
+                            <a href="#" data-class="hyrbid" class="carClass">Hybrid</a>
                         </li>
                         <li>
-                            <a href="#">Electric</a>
+                            <a href="#" data-class="electric" class="carClass">Electric</a>
                         </li>
                     </ul>
                 </div>
-
-
-
             </form>
+            <br>
+            <br>
+            <br>
+
             <button class="btn btn-primary" id="submit" type="submit">Submit</button><span id="message"></span></div>
     </div>
     </div>
