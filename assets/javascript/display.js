@@ -1,8 +1,5 @@
 $(document).ready(function() {
-
-    /* global $ */
     /* global firebase */
-
     // Initialize Firebase
     var config = {
         apiKey: "AIzaSyAAi7s87SW5XOtn5dKwIBwEIZsY4tBZfkg",
@@ -30,6 +27,7 @@ $(document).ready(function() {
     var userMPG;
     var classClick;
 
+//This funciton will clear a search and reset the page
     var reset = function() {
         startLocation = "";
         destination = "";
@@ -53,8 +51,14 @@ $(document).ready(function() {
         $("#carClass").data("click", "unclicked");
         classClick = $("#carClass").data("click");
     };
+    
+     //reset
+    $("#reset").on("click", function() {
+        reset();
+    });
 
-
+//USING DROPDOWN TO SELECT MPG
+//==============================================================================================================================================================
     $(document).ready(function() {
         $("#carYear li a").click(function() {
             $("#dropdownMenu1").text($(this).text());
@@ -67,69 +71,38 @@ $(document).ready(function() {
         });
     });
 
-
     $(".years").on("click", function() {
         carYear = ($(this).data("year"));
-        console.log(carYear);
-        // db.ref().once("value", function(snapshot) {
-        //     userYear = snapshot.child(carYear).val();
-        //     console.log("user chose: " + JSON.stringify(userYear));
-        // });
     });
-    // db.ref().once("value", function(snapshot) {
-    //     var carYears = snapshot.child("2017").val()
-    //     console.log(carYears)
-    // })
-
-    // db.ref().once("value", function(snapshot) {
-    //     var carYears = snapshot.child("2016").val()
-    //     console.log(carYears)
-    // })
-
-    // db.ref().once("value", function(snapshot) {
-    //     var carYears = snapshot.child("2015").val()
-    //     console.log(carYears)
-    // })
+    
     $(".carClass").on("click", function() {
         var carClass = ($(this).data("class"));
-        console.log(carClass);
         $("#carClass").data("click", "clicked");
         classClick = $("#carClass").data("click");
-        $("#mpgParent").hide()
-        console.log(classClick);
+        $("#mpgParent").hide();
         db.ref().once("value", function(snapshot) {
             userMPG = snapshot.child(JSON.stringify(carYear) + "/" + carClass).val();
-            console.log("user chose: " + JSON.stringify(userMPG));
         });
     });
+//==============================================================================================================================================================
 
-    // $("carClass").on("click", function() {
-
-    //     db.ref().once("value", function(snapshot) {
-    //         var carClasses = snapshot.child(userYear + "/" + "light sedan").val()
-    //         console.log(carClasses)
-    //     })
-    // })
-
-
-
-
-
-
+//SETTING UP THE PAGE
+//==============================================================================================================================================================
     $("#arrow").hide();
     $("#display").hide();
     $("#loading").hide();
     $("#locationcheck").on("click", function() {
         if ($("#locationcheck").prop("checked")) {
-            console.log("checked");
             $("#startLocationParent").hide();
         }
         if (!$("#locationcheck").prop("checked")) {
-            console.log("unchecked");
             $("#startLocationParent").show();
         }
     });
+//==============================================================================================================================================================
 
+//WHEN THE USER CLICKS THE SUBMIT BUTTON
+//==============================================================================================================================================================
 
     $("#submit").on("click", function(event) {
         event.preventDefault();
@@ -147,14 +120,7 @@ $(document).ready(function() {
                 $("#main").hide();
                 $("#loading").show();
                 getStartLatLong().done(function() {
-                    console.log("click: " + startLat + ", " + startLng);
                     getDestLatLong().done(function() {
-                        console.log("click: " + destLat + ", " + destLng);
-                        console.log("startAddress: " + startAddress + " endAddress: " + endAddress);
-                        // uberInfo(startLat, startLng, destLat, destLng);
-                        // lyftInfo(startLat, startLng, destLat, destLng);
-                        // $("#loading").hide();
-                        // $("#display").show();
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
                             $("#display").show();
@@ -166,15 +132,7 @@ $(document).ready(function() {
                 $("#main").hide();
                 $("#loading").show();
                 getLocation(startAddress).done(function() {
-                    console.log("click: " + startLat + ", " + startLng);
-                    console.log("STARTADDRESS : " + startAddress);
                     getDestLatLong().done(function() {
-                        console.log("click: " + destLat + ", " + destLng);
-                        console.log("STARTADDRESS: " + startAddress);
-                        // uberInfo(startLat, startLng, destLat, destLng);
-                        // lyftInfo(startLat, startLng, destLat, destLng);
-                        // $("#loading").hide();
-                        // $("#display").show();
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
                             $("#display").show();
@@ -183,17 +141,16 @@ $(document).ready(function() {
                 });
             }
         }
-
         else {
             $("#message").html("Please input all information");
         }
-
     });
+//==============================================================================================================================================================
 
-    //--------Geolocation Functions and Google API Calls-------------
+//GEOLOCATION FUNCTIONS AND API REQUESTS
+//==============================================================================================================================================================
 
     //determines geolocation from browser
-
     function getLocation() {
         var d1 = new $.Deferred();
         var d2 = new $.Deferred();
@@ -208,23 +165,17 @@ $(document).ready(function() {
                 url: URL,
                 method: "GET"
             }).done(function(response) {
-                console.log("getLocation response: " + response);
                 startAddress = response.results["0"].formatted_address;
-                console.log("startAddress inside getLocation" + startAddress);
                 $("#formatS").html(startAddress);
-                console.log(startAddress);
                 $("#arrow").show();
-                d1.resolve(startAddress)
+                d1.resolve(startAddress);
             });
-
-
             var tmpLatLng = {
                 startLat: startLat,
                 startLng: startLng,
                 startAddress: startAddress
             };
             d2.resolve(tmpLatLng);
-            console.log("my position: " + position.coords.latitude + "," + position.coords.longitude);
         };
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
@@ -233,20 +184,10 @@ $(document).ready(function() {
             lattitude.innerHTML = "Geolocation is not supported by this browser.";
         }
         return $.when(d1, d2).done(function() {
-            console.log('both tasks in getLocation are done');
         }).promise();
     }
-    //console.logs the browser's latitude and longitude
-
-    // function showPosition(position) {
-    //     // $("#latreport").innerHTML = "Latitude: " + position.coords.latitude +
-    //     //     "<br>Longitude: " + position.coords.longitude;
-    //     // console.log("my position: " + position.coords.latitude + "," + position.coords.longitude);
-    //     startLat = position.coords.latitude;
-    //     startLng = position.coords.longitude;
-    // }
+    
     var getStartLatLong = function() {
-        //var destinationAddress = $("#destination").val().trim();
         var geoLocURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + startLocation + "&key=AIzaSyB6P6KfBWOmNmMk9IRDVgl8OTmVtMmSEQk";
         var d = new $.Deferred();
         $.ajax({
@@ -254,19 +195,10 @@ $(document).ready(function() {
             method: "GET"
         }).done(function(results) {
             startAddress = results.results["0"].formatted_address;
-            console.log("startAdress inside getStartLatLong" + startAddress)
             $("#formatS").html(startAddress); // + ", " + results.results["0"].address_components[3].short_name + ", " + results.results["0"].address_components[6].short_name + " ");
             $("#arrow").show();
-            console.log("startLat: " + results.results["0"].geometry.location.lat);
-            console.log("startlng: " + results.results["0"].geometry.location.lng);
             startLat = results.results["0"].geometry.location.lat;
-            console.log("startLat var: " + startLat);
             startLng = results.results["0"].geometry.location.lng;
-            console.log("startLng var: " + startLng);
-            // var startAd1 = results.results["0"].address_components["0"].short_name;
-            // var startAd2 = results.results["0"].address_components["1"].short_name;
-            // startAddress = (startAd1 + " " + startAd2);
-            // console.log("starting address: " + startAddress);
             var tmpLatLng = {
                 startLat: startLat,
                 startLng: startLng,
@@ -278,7 +210,6 @@ $(document).ready(function() {
 
     };
     var getDestLatLong = function() {
-        //var destinationAddress = $("#destination").val().trim();
         var geoLocURL = "https://maps.googleapis.com/maps/api/geocode/json?address=" + destination + "&key=AIzaSyB6P6KfBWOmNmMk9IRDVgl8OTmVtMmSEQk";
         var d = new $.Deferred();
         $.ajax({
@@ -287,15 +218,8 @@ $(document).ready(function() {
         }).done(function(results) {
             endAddress = results.results["0"].formatted_address;
             $("#formatD").text(endAddress);
-            console.log("destLat: " + results.results["0"].geometry.location.lat);
-            console.log("destLng: " + results.results["0"].geometry.location.lng);
             destLat = results.results["0"].geometry.location.lat;
-            console.log("destLat");
             destLng = results.results["0"].geometry.location.lng;
-            // var endAd1 = results.results["0"].address_components["0"].short_name;
-            // var endAd2 = results.results["0"].address_components["1"].short_name;
-            // endAddress = (endAd1 + " " + endAd2);
-            // console.log("destination address: " + endAddress);
             var tmpLatLng = {
                 destLat: destLat,
                 destLng: destLng,
@@ -305,11 +229,10 @@ $(document).ready(function() {
         });
         return d.promise();
     };
+//==============================================================================================================================================================
 
-    //-----------End Geo Location Functions and Google API calls
-
-    //UBER
-    //============================================================================================================
+//UBER
+//==============================================================================================================================================================
 
     function uberInfo(y, x, yy, xx) { //starting latitude=x, starting longitude = y, ending latitude = xx, ending longitude = yy
 
@@ -327,7 +250,6 @@ $(document).ready(function() {
                 access_token: token
             },
             success: function(uberTimeResults) {
-                console.log(uberTimeResults);
                 //This loop will ensure we get the data for uberX, we can easily add another if statement to set a variable in case we want to an estimate for other types of uber
                 for (var i = 0; i < uberTimeResults.times.length; i++) {
                     if ("uberX" === uberTimeResults.times[i].display_name) {
@@ -335,7 +257,6 @@ $(document).ready(function() {
                     }
                 }
                 var minutesTilUber = Math.round(uberTimeResults.times[uberXindex].estimate / 60); //Minutes away of the closest Uber
-                console.log("minutes til next uber: " + minutesTilUber);
                 if (!minutesTilUber) {
                     $("#uberETA").text(" Currently there are no drivers available.");
                 }
@@ -360,15 +281,12 @@ $(document).ready(function() {
                 access_token: token
             },
             success: function(uberPriceResults) {
-                console.log(uberPriceResults);
                 for (var i = 0; i < uberPriceResults.prices.length; i++) {
                     if ("uberX" === uberPriceResults.prices[i].display_name) {
                         var uberXindex = i;
                     }
                 }
                 var uberXprice = uberPriceResults.prices[uberXindex].estimate; //The range of the Uber Price Estimate
-                // var uberXdistance = uberPriceResults.prices[uberXindex].distance; // The distance of the trip in miles
-                // var uberXduration = Math.round(uberPriceResults.prices[uberXindex].duration / 60); //The minutes the trip will take
                 var uberAverageXprice = Math.round((uberPriceResults.prices[uberXindex].high_estimate + uberPriceResults.prices[uberXindex].low_estimate) / 2); //The average of the range of prices in case we want Jim to get his way --- nice
                 $("#ubercost").text(uberXprice);
 
@@ -380,14 +298,12 @@ $(document).ready(function() {
             }
         });
         return $.when(d1, d2).done(function() {
-            console.log('both tasks in uberInfo are done');
         }).promise();
     }
+//==============================================================================================================================================================
 
-
-
-    //LYFT
-    //=============================================================================================================
+//LYFT
+//==============================================================================================================================================================
 
     function lyftInfo(y, x, yy, xx) {
 
@@ -409,9 +325,7 @@ $(document).ready(function() {
                 xhr.setRequestHeader("Authorization", "Basic " + btoa(clientId + ":" + clientSecret));
             },
             success: function(response) {
-                console.log(response);
                 lyftToken = response.access_token;
-                console.log(lyftToken);
 
                 //Uses token to request driver ETA information
                 var lyftETAData = {
@@ -425,21 +339,17 @@ $(document).ready(function() {
                 };
 
                 $.ajax(lyftETAData).done(function(lyftTimeResults) {
-                    console.log(lyftTimeResults);
                     for (var i = 0; i < lyftTimeResults.eta_estimates.length; i++) {
                         if ("Lyft" === lyftTimeResults.eta_estimates[i].display_name) {
                             var lyftindex = i;
                         }
                     }
                     var minutesTilLyft = Math.round(lyftTimeResults.eta_estimates[lyftindex].eta_seconds / 60);
-                    console.log("minutes til next lyft: " + minutesTilLyft);
                     if (!minutesTilLyft) {
                         $("#lyftETA").text(" Currently there are no drivers available.");
                     }
                     else {
-                        // $("#lyftETABefore").text(" A driver in your area is ");
                         $("#lyftETABefore").html("A driver in your area is <span id='lyftETA'>" + minutesTilLyft + " minutes</span> away!");
-                        // $("#lyftETAAfter").text(" away!");
                     }
                     d1.resolve(minutesTilLyft);
                 });
@@ -458,21 +368,18 @@ $(document).ready(function() {
                 $.ajax(lyftPriceData).done(function(lyftPriceResults) {
                     //If there is a result from the price estimate request
                     if (lyftPriceResults.cost_estimates.length > 0) {
-                        console.log(lyftPriceResults);
                         for (var i = 0; i < lyftPriceResults.cost_estimates.length; i++) {
                             if ("Lyft" === lyftPriceResults.cost_estimates[i].display_name) {
                                 var lyftindex = i;
                             }
                         }
                         var lyftAveragePrice = Math.round((lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min + lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) / 200);
-                        console.log("lyft average price: " + lyftAveragePrice);
                         if (lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min !== lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) {
                             var lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100) + "-" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max / 100);
                         }
                         else {
                             lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100);
                         }
-                        console.log("Price estimate for lyft: " + lyftPrice);
                         $("#lyftcost").text(lyftPrice);
                         d2.resolve(lyftPrice);
                     }
@@ -488,18 +395,16 @@ $(document).ready(function() {
 
         }); //ends initial AJAX request
         return $.when(d1, d2).done(function() {
-            console.log('both tasks in lyftInfo are done');
         }).promise();
     } //ends function
 
-    //reset
-    $("#reset").on("click", function() {
-        reset();
-    });
+//==============================================================================================================================================================
+
+//GET THE DRIVE DISTANCE AND DRIVE TIME FROM GOOGLE DIRECTIONS
+//==============================================================================================================================================================
 
     //This function will give us the drive distance and time from the Google Directions Service API JavaScript Library. Gas cost is also calculatd here.
     function getDistanceTime(x, y) {
-        console.log("getDistanceTime function ran");
         var directionsService = new google.maps.DirectionsService();
         var request = {
             origin: x, // a city, full address, landmark etc
@@ -508,29 +413,20 @@ $(document).ready(function() {
         };
 
         directionsService.route(request, function(response, status) {
-            console.log("****routing****");
             if (status == google.maps.DirectionsStatus.OK) {
-                console.log(response);
                 var distance = response.routes[0].legs[0].distance.text;
                 var duration = response.routes[0].legs[0].duration.text;
                 $("#theDistance").text(distance);
                 $("#theDuration").text(duration);
                 //Drive Cost
                 var driveDistance = parseInt(distance);
-                console.log("distance: " + distance);
                 var gasPrice = 2.50;
                 var driveCost = (driveDistance / mpg) * gasPrice;
-                console.log("**********************")
-                console.log("drivecost: " + driveCost);
-                console.log("mpg: " + mpg);
-                console.log("***********************")
                 $("#gascost").text("$" + driveCost.toFixed(2));
-
             }
             else {
-                alert("getDistanceTime failed")
+                alert("getDistanceTime failed");
             }
-
         });
     }
 
