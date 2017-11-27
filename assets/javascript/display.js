@@ -36,6 +36,7 @@ $(document).ready(function() {
         startLng = "";
         destLat = "";
         destLng = "";
+        $("#badEntry").hide();
         $("#main").show();
         $("#loading").hide();
         $("#display").hide();
@@ -47,6 +48,7 @@ $(document).ready(function() {
         $("#mpgParent").show();
         $("#dropdownMenu1").text("Car Year");
         $("#dropdownMenu2").text("Car Class");
+        $("#message").html("");
         userMPG = "";
         $("#carClass").data("click", "unclicked");
         classClick = $("#carClass").data("click");
@@ -88,6 +90,7 @@ $(document).ready(function() {
 
 //SETTING UP THE PAGE
 //==============================================================================================================================================================
+    $("#badEntry").hide();
     $("#arrow").hide();
     $("#display").hide();
     $("#loading").hide();
@@ -111,31 +114,40 @@ $(document).ready(function() {
         mpg = $("#mpg").val();
 
         if (((startLocation !== "") || ($("#locationcheck").prop("checked"))) && (destination !== "") && ((mpg !== "")) || (classClick === "clicked")) {
-
             if (classClick === "clicked") {
                 mpg = userMPG;
             }
             // waits for getStartLatLong to finish
             if (!$("#locationcheck").prop("checked")) {
+                //console.log($("#theDistance").text());
+                //$("#gascost").text("");
+               // $("#theDistance").text("");
                 $("#main").hide();
                 $("#loading").show();
                 getStartLatLong().done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
-                            $("#display").show();
+                            //if($("#theDistance").text()!=="" || $("#gascost").text()!==""){    
+                                $("#display").show();
+                            //}   
                         });
                     });
                 });
             }
-            else {
+            else {                
+                //console.log($("#theDistance").text());
+                //$("#gascost").text("");
+                //$("#theDistance").text("");
                 $("#main").hide();
                 $("#loading").show();
                 getLocation(startAddress).done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
-                            $("#display").show();
+                           // if($("#theDistance").text()!="" || $("#gascost").text()!==""){
+                                $("#display").show();
+                            //}
                         });
                     });
                 });
@@ -425,7 +437,9 @@ $(document).ready(function() {
                 $("#gascost").text("$" + driveCost.toFixed(2));
             }
             else {
-                alert("getDistanceTime failed");
+                //alert("There is no route information available for this trip");
+                $("#badEntry").show();
+                setTimeout(reset, 3000);
             }
         });
     }

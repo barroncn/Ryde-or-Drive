@@ -5,7 +5,7 @@ body {
 
 #loading {
     text-align: center;
-    background: url(../images/loading-1.gif);
+    background: url(../images/tts-loading.gif);
     display: block;
     height: 300px;
     width: 300px;
