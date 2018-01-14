@@ -1,4 +1,4 @@
-Ryde or Drive App
+# Ryde or Drive App
 
 [Check it out here!](https://barroncn.github.io/Ryde-or-Drive/)
 
