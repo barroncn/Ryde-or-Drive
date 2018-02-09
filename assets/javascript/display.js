@@ -125,6 +125,7 @@ $(document).ready(function() {
                 getStartLatLong().done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
+                            console.log("ALL DONE, HIDE LOADING GIF");
                             $("#loading").hide();
                             console.log($("#theDistance").text() + " DISTANCE");
                             if ($("#theDistance").text() !== "") {
@@ -141,6 +142,7 @@ $(document).ready(function() {
                 getLocation(startAddress).done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
+                            console.log("ALL DONE, HIDE LOADING GIF");
                             $("#loading").hide();
                             console.log($("#theDistance").text() + " DISTANCE");
                             if ($("#theDistance").text() != "") {
@@ -292,19 +294,23 @@ $(document).ready(function() {
                 access_token: token
             },
             success: function(uberPriceResults) {
+                console.log("UBER PRICE RESULTS");
+                console.log(uberPriceResults);
                 for (var i = 0; i < uberPriceResults.prices.length; i++) {
                     if ("uberX" === uberPriceResults.prices[i].display_name) {
                         var uberXindex = i;
+                        var uberXprice = uberPriceResults.prices[uberXindex].estimate; //The range of the Uber Price Estimate
+                        console.log("UBERXPRICE: " + uberXprice);
+                        var uberAverageXprice = Math.round((uberPriceResults.prices[uberXindex].high_estimate + uberPriceResults.prices[uberXindex].low_estimate) / 2); //The average of the range of prices in case we want Jim to get his way --- nice
+                        $("#ubercost").text(uberXprice);
+
+                        return d2.resolve(uberXprice, uberAverageXprice);
+                    }
+                    else if (i === uberPriceResults.prices.length - 1) {
+                        $("#ubercost").text("There is no price estimate available.");
+                        d2.resolve();
                     }
                 }
-                if (uberXindex) {
-                    var uberXprice = uberPriceResults.prices[uberXindex].estimate; //The range of the Uber Price Estimate
-                    var uberAverageXprice = Math.round((uberPriceResults.prices[uberXindex].high_estimate + uberPriceResults.prices[uberXindex].low_estimate) / 2); //The average of the range of prices in case we want Jim to get his way --- nice
-                    $("#ubercost").text(uberXprice);
-
-                    d2.resolve(uberXprice, uberAverageXprice);
-                }
-                else { $("#ubercost").text("There is no price estimate available.") };
 
             },
             error: function() {
@@ -312,6 +318,7 @@ $(document).ready(function() {
                 d2.resolve();
             }
         });
+        console.log("UBER FINISHED");
         return $.when(d1, d2).done(function() {}).promise();
     }
     //==============================================================================================================================================================
@@ -424,6 +431,7 @@ $(document).ready(function() {
             // }
 
         }); //ends initial AJAX request
+        console.log("LIFT FINISHED");
         return $.when(d1, d2).done(function() {}).promise();
     } //end function
 
@@ -434,6 +442,7 @@ $(document).ready(function() {
 
     //This function will give us the drive distance and time from the Google Directions Service API JavaScript Library. Gas cost is also calculatd here.
     function getDistanceTime(x, y) {
+        var d = new $.Deferred()
         var directionsService = new google.maps.DirectionsService();
         var request = {
             origin: x, // a city, full address, landmark etc
@@ -443,7 +452,8 @@ $(document).ready(function() {
 
         directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
-                console.log("RESPONSE: " + response);
+                console.log("DISTANCE: " + response.routes[0].legs[0].distance.text);
+                console.log("DURATION: " + response.routes[0].legs[0].duration.text);
                 var distance = response.routes[0].legs[0].distance.text;
                 var duration = response.routes[0].legs[0].duration.text;
                 $("#theDistance").text(distance);
@@ -453,15 +463,17 @@ $(document).ready(function() {
                 var gasPrice = 2.50;
                 var driveCost = (driveDistance / mpg) * gasPrice;
                 $("#gascost").text("$" + driveCost.toFixed(2));
+                d.resolve();
             }
             else {
                 //alert("There is no route information available for this trip");
+                console.log("NO ROUTE INFO FOR TRIP");
                 $("#badEntry").show();
                 setTimeout(reset, 3000);
+                d.resolve();
             }
         });
+        return d.promise();
     }
-
-    console.log("test");
 
 }); //doc.ready
