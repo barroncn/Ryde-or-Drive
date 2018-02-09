@@ -119,35 +119,33 @@ $(document).ready(function() {
             }
             // waits for getStartLatLong to finish
             if (!$("#locationcheck").prop("checked")) {
-                //console.log($("#theDistance").text());
-                //$("#gascost").text("");
-               // $("#theDistance").text("");
+                $("#theDistance").text("");
                 $("#main").hide();
                 $("#loading").show();
                 getStartLatLong().done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
-                            //if($("#theDistance").text()!=="" || $("#gascost").text()!==""){    
+                            console.log($("#theDistance").text() + " DISTANCE");
+                            if($("#theDistance").text()!==""){    
                                 $("#display").show();
-                            //}   
+                            }   
                         });
                     });
                 });
             }
             else {                
-                //console.log($("#theDistance").text());
-                //$("#gascost").text("");
-                //$("#theDistance").text("");
+                $("#theDistance").text("");
                 $("#main").hide();
                 $("#loading").show();
                 getLocation(startAddress).done(function() {
                     getDestLatLong().done(function() {
                         $.when(uberInfo(startLat, startLng, destLat, destLng), lyftInfo(startLat, startLng, destLat, destLng), getDistanceTime(startAddress, endAddress)).done(function() {
                             $("#loading").hide();
-                           // if($("#theDistance").text()!="" || $("#gascost").text()!==""){
+                            console.log($("#theDistance").text() + " DISTANCE");
+                            if($("#theDistance").text()!=""){
                                 $("#display").show();
-                            //}
+                            }
                         });
                     });
                 });
@@ -268,11 +266,13 @@ $(document).ready(function() {
                         var uberXindex = i;
                     }
                 }
-                var minutesTilUber = Math.round(uberTimeResults.times[uberXindex].estimate / 60); //Minutes away of the closest Uber
-                if (!minutesTilUber) {
+                if(uberXindex==undefined){
+                //var minutesTilUber = Math.round(uberTimeResults.times[uberXindex].estimate / 60); //Minutes away of the closest Uber
+                // if (!minutesTilUber) {
                     $("#uberETA").text(" Currently there are no drivers available.");
                 }
                 else {
+                    var minutesTilUber = Math.round(uberTimeResults.times[uberXindex].estimate / 60); //Minutes away of the closest Uber
                     $("#uberETABefore").text(" A driver in your area is ");
                     $("#uberETA").text(minutesTilUber + " minutes");
                     $("#uberETAAfter").text(" away!");
@@ -298,11 +298,15 @@ $(document).ready(function() {
                         var uberXindex = i;
                     }
                 }
+                if(uberXindex){
                 var uberXprice = uberPriceResults.prices[uberXindex].estimate; //The range of the Uber Price Estimate
                 var uberAverageXprice = Math.round((uberPriceResults.prices[uberXindex].high_estimate + uberPriceResults.prices[uberXindex].low_estimate) / 2); //The average of the range of prices in case we want Jim to get his way --- nice
                 $("#ubercost").text(uberXprice);
 
                 d2.resolve(uberXprice, uberAverageXprice);
+                }
+                else{$("#ubercost").text("There is no price estimate available.")};
+
             },
             error: function() {
                 $("#ubercost").text("There is no price estimate available.");
@@ -351,19 +355,26 @@ $(document).ready(function() {
                 };
 
                 $.ajax(lyftETAData).done(function(lyftTimeResults) {
-                    for (var i = 0; i < lyftTimeResults.eta_estimates.length; i++) {
-                        if ("Lyft" === lyftTimeResults.eta_estimates[i].display_name) {
-                            var lyftindex = i;
+                    // if(lyftTimeResults.error =="no_service_in_area"){
+                    //     $("#lyftETA").text("");
+                    // }
+                    // else{
+                        console.log(lyftTimeResults);
+                        for (var i = 0; i < lyftTimeResults.eta_estimates.length; i++) {
+                            if ("Lyft" === lyftTimeResults.eta_estimates[i].display_name) {
+                                var lyftindex = i;
+                            }
                         }
-                    }
-                    var minutesTilLyft = Math.round(lyftTimeResults.eta_estimates[lyftindex].eta_seconds / 60);
-                    if (!minutesTilLyft) {
-                        $("#lyftETA").text(" Currently there are no drivers available.");
-                    }
-                    else {
-                        $("#lyftETABefore").html("A driver in your area is <span id='lyftETA'>" + minutesTilLyft + " minutes</span> away!");
-                    }
-                    d1.resolve(minutesTilLyft);
+                        if (lyftindex==undefined) {
+                            $("#lyftETA").text(" Currently there are no drivers available.");
+                        }
+                        else {
+                            var minutesTilLyft = Math.round(lyftTimeResults.eta_estimates[lyftindex].eta_seconds / 60);
+                            console.log(minutesTilLyft + " minutes til Lyft");
+                            $("#lyftETABefore").html("A driver in your area is <span id='lyftETA'>" + minutesTilLyft + " minutes</span> away!");
+                        }
+                        d1.resolve(minutesTilLyft);
+                    // }
                 });
 
                 //Uses token to request price estimate
@@ -378,32 +389,41 @@ $(document).ready(function() {
                 };
 
                 $.ajax(lyftPriceData).done(function(lyftPriceResults) {
+                    // if(lyftPriceResults.error =="no_service_in_area"){
+                    //     $("#lyftcost").text("There is no service available in this area.");
+                    // }
+                    // else{
                     //If there is a result from the price estimate request
-                    if (lyftPriceResults.cost_estimates.length > 0) {
-                        for (var i = 0; i < lyftPriceResults.cost_estimates.length; i++) {
-                            if ("Lyft" === lyftPriceResults.cost_estimates[i].display_name) {
-                                var lyftindex = i;
+                        if (lyftPriceResults.cost_estimates.length > 0) {
+                            for (var i = 0; i < lyftPriceResults.cost_estimates.length; i++) {
+                                if ("Lyft" === lyftPriceResults.cost_estimates[i].display_name) {
+                                    var lyftindex = i;
+                                }
                             }
+                            var lyftAveragePrice = Math.round((lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min + lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) / 200);
+                            if (lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min !== lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) {
+                                var lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100) + "-" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max / 100);
+                            }
+                            else {
+                                lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100);
+                            }
+                            $("#lyftcost").text(lyftPrice);
+                            d2.resolve(lyftPrice);
                         }
-                        var lyftAveragePrice = Math.round((lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min + lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) / 200);
-                        if (lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min !== lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max) {
-                            var lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100) + "-" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_max / 100);
-                        }
+                        //If there is no price estimate for the given trip request
                         else {
-                            lyftPrice = "$" + Math.round(lyftPriceResults.cost_estimates[lyftindex].estimated_cost_cents_min / 100);
+                            $("#lyftcost").text("No price estimate available.");
                         }
-                        $("#lyftcost").text(lyftPrice);
                         d2.resolve(lyftPrice);
-                    }
-                    //If there is no price estimate for the given trip request
-                    else {
-                        $("#lyftcost").text("No price estimate available.");
-                    }
-                    d2.resolve(lyftPrice);
+                    // }
                 });
 
 
-            } //ends success
+            }, //ends success
+            // error: function() {
+            //     $("#lyftcost").text("There is no price estimate available.");
+            //     $("#lyftETA").text(" Currently there are no drivers available.");
+            // }
 
         }); //ends initial AJAX request
         return $.when(d1, d2).done(function() {
@@ -426,6 +446,7 @@ $(document).ready(function() {
 
         directionsService.route(request, function(response, status) {
             if (status == google.maps.DirectionsStatus.OK) {
+                console.log("RESPONSE: " + response);
                 var distance = response.routes[0].legs[0].distance.text;
                 var duration = response.routes[0].legs[0].duration.text;
                 $("#theDistance").text(distance);
