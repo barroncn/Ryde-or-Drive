@@ -425,7 +425,7 @@ $(document).ready(function() {
 
         }); //ends initial AJAX request
         return $.when(d1, d2).done(function() {}).promise();
-    } //ends function
+    } //end function
 
     //==============================================================================================================================================================
 
