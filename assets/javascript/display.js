@@ -307,14 +307,14 @@ $(document).ready(function() {
                         return d2.resolve(uberXprice, uberAverageXprice);
                     }
                     else if (i === uberPriceResults.prices.length - 1) {
-                        $("#ubercost").text("There is no price estimate available.");
+                        $("#ubercost").text("No price estimate available.");
                         d2.resolve();
                     }
                 }
 
             },
             error: function() {
-                $("#ubercost").text("There is no price estimate available.");
+                $("#ubercost").text("No price estimate available.");
                 d2.resolve();
             }
         });
