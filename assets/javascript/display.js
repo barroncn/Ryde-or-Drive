@@ -248,7 +248,7 @@ $(document).ready(function() {
     function uberInfo(y, x, yy, xx) { //starting latitude=x, starting longitude = y, ending latitude = xx, ending longitude = yy
 
         //This token will need to be updated
-        var token = "KA.eyJ2ZXJzaW9uIjoyLCJpZCI6IkhPS0Nueng0U0E2cFZmN2dDblhXZ0E9PSIsImV4cGlyZXNfYXQiOjE1MjA3OTU4NTIsInBpcGVsaW5lX2tleV9pZCI6Ik1RPT0iLCJwaXBlbGluZV9pZCI6MX0.WsdETqOhRSJr6Dhcg7lojt7m4OdjEBmqqz8XyE72SSo";
+        var token = "KA.eyJ2ZXJzaW9uIjoyLCJpZCI6InMxNWdRNlUwUU02am5rM1NoN2Zaenc9PSIsImV4cGlyZXNfYXQiOjE1MzI0NDUwOTMsInBpcGVsaW5lX2tleV9pZCI6Ik1RPT0iLCJwaXBlbGluZV9pZCI6MX0.mciCCTWOBAnwOdf10uqwGAvqNrpLh_PbemoDRTg01dY";
         var d1 = new $.Deferred();
         var d2 = new $.Deferred();
         // AJAX request for Uber's time estimate information    
