@@ -336,7 +336,7 @@ $(document).ready(function() {
 
         //Requests a token
         $.ajax({
-            url: 'https://api.lyft.com/oauth/token',
+            url: 'https://cors.io/?http://api.lyft.com/oauth/token',
             type: 'POST',
             data: {
                 grant_type: 'client_credentials',
